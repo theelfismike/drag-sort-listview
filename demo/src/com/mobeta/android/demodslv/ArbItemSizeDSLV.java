@@ -1,18 +1,15 @@
 package com.mobeta.android.demodslv;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import com.mobeta.android.dslv.DragSortListView;
-import android.widget.TextView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import com.mobeta.android.dslv.DragSortListView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArbItemSizeDSLV extends ListActivity {
 
@@ -23,35 +20,30 @@ public class ArbItemSizeDSLV extends ListActivity {
     private String[] mArtistNames;
     private String[] mArtistAlbums;
 
-
-    private DragSortListView.DropListener onDrop =
-      new DragSortListView.DropListener() {
+    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
         @Override
         public void drop(int from, int to) {
-          JazzArtist item = adapter.getItem(from);
+            JazzArtist item = adapter.getItem(from);
 
-          adapter.remove(item);
-          adapter.insert(item, to);
+            adapter.remove(item);
+            adapter.insert(item, to);
         }
-      };
+    };
 
-    private DragSortListView.RemoveListener onRemove = 
-      new DragSortListView.RemoveListener() {
+    private DragSortListView.RemoveListener onRemove = new DragSortListView.RemoveListener() {
         @Override
         public void remove(int which) {
-          adapter.remove(adapter.getItem(which));
+            adapter.remove(adapter.getItem(which));
         }
-      };
+    };
 
-
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.dslv_main);
 
-        DragSortListView lv = (DragSortListView) getListView(); 
+        DragSortListView lv = (DragSortListView) getListView();
         lv.setDropListener(onDrop);
         lv.setRemoveListener(onRemove);
 
@@ -60,64 +52,60 @@ public class ArbItemSizeDSLV extends ListActivity {
 
         mArtists = new ArrayList<JazzArtist>();
         JazzArtist ja;
-        for (int i = 0; i < mArtistNames.length; ++i) {
-          ja = new JazzArtist();
-          ja.name = mArtistNames[i];
-          if (i < mArtistAlbums.length) {
-            ja.albums = mArtistAlbums[i];
-          } else {
-            ja.albums = "No albums listed";
-          }
-          mArtists.add(ja);
+        for(int i = 0; i < mArtistNames.length; ++i) {
+            ja = new JazzArtist();
+            ja.name = mArtistNames[i];
+            if(i < mArtistAlbums.length) {
+                ja.albums = mArtistAlbums[i];
+            } else {
+                ja.albums = "No albums listed";
+            }
+            mArtists.add(ja);
         }
 
         adapter = new JazzAdapter(mArtists);
-        
-        setListAdapter(adapter);
 
+        setListAdapter(adapter);
     }
 
     private class JazzArtist {
-      public String name;
-      public String albums;
+        public String name;
+        public String albums;
 
-      @Override
-      public String toString() {
-        return name;
-      }
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     private class ViewHolder {
-      public TextView nameView;
-      public TextView albumsView;
+        public TextView albumsView;
     }
 
     private class JazzAdapter extends ArrayAdapter<JazzArtist> {
-      
-      public JazzAdapter(List<JazzArtist> artists) {
-        super(ArbItemSizeDSLV.this, R.layout.jazz_artist_list_item,
-          R.id.artist_name_textview, artists);
-      }
 
-      public View getView(int position, View convertView, ViewGroup parent) {
-        View v = super.getView(position, convertView, parent);
-
-        if (v != convertView && v != null) {
-          ViewHolder holder = new ViewHolder();
-
-          TextView tv = (TextView) v.findViewById(R.id.artist_albums_textview);
-          holder.albumsView = tv;
-
-          v.setTag(holder);
+        public JazzAdapter(List<JazzArtist> artists) {
+            super(ArbItemSizeDSLV.this, R.layout.jazz_artist_list_item, R.id.artist_name_textview, artists);
         }
 
-        ViewHolder holder = (ViewHolder) v.getTag();
-        String albums = getItem(position).albums;
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = super.getView(position, convertView, parent);
 
-        holder.albumsView.setText(albums);
+            if(v != convertView && v != null) {
+                ViewHolder holder = new ViewHolder();
 
-        return v;
-      }
+                TextView tv = (TextView) v.findViewById(R.id.artist_albums_textview);
+                holder.albumsView = tv;
+
+                v.setTag(holder);
+            }
+
+            ViewHolder holder = (ViewHolder) v.getTag();
+            String albums = getItem(position).albums;
+
+            holder.albumsView.setText(albums);
+
+            return v;
+        }
     }
-
 }
